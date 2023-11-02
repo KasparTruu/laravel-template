@@ -1,66 +1,150 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## Laravel basics 2
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Create an e-mail notification app.
 
-## About Laravel
+## Prerequesites
+- [Server requirements](https://laravel.com/docs/10.x/deployment#server-requirements)
+- [Mailtrap account](https://mailtrap.io/)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Step 1 - Setup
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Create an `.env` file based on `.env_example`
+- Open mailtrap and select _laravel 9+_ from the integrations dropdown.
+  <img width="1298" alt="image" src="https://github.com/RalfHei/laravel-template/assets/56673494/9f5ea50c-e765-4079-904d-0b64c85290c1">
+- Replace `MAIL_*` variables in the `.env` file with the ones provided by mailtrap.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Step 2 - artisan commands
 
-## Learning Laravel
+- Create an artisan command named `TimetableNotification`
+- Create a mailable named `Timetable`
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Resources
+- [Generating Mailables](https://laravel.com/docs/10.x/mail#generating-mailables)
+- [Writing Commands](https://laravel.com/docs/10.x/artisan#writing-commands)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Step 3 - Http client
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+_An example timetable request_
 
-## Laravel Sponsors
+`https://tahvel.edu.ee/hois_back/timetableevents/timetableByGroup/38?from=2023-10-30T00:00:00Z&studentGroups=5901&thru=2023-11-05T00:00:00Z`
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- Inside the `TimetableNotification` command's `handle()` method fetch data from the API endpoint using Http client.
+- Using `dd()` helper method dump out the response.
+- To run the command in terminal: `php artisan $signature` _(replace `$signature` with the respective variables string value from the `TimetableNotification` class)_
+- Response in the terminal should look like this:
+  <img width="714" alt="image" src="https://github.com/RalfHei/laravel-template/assets/56673494/5dcc90b3-6b6c-4609-9418-9f3633e23a7c">
 
-### Premium Partners
+- To get the actual data from the response we need to use the `json()` method _(Check the "making request" docs)_
+- Running the command with the added `json()` method we should see the following output:
+  <img width="714" alt="image" src="https://github.com/RalfHei/laravel-template/assets/56673494/c5455ce5-246a-4351-a01b-3a684c7f9fae">
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
 
-## Contributing
+### Resources
+- [Http client: making requests](https://laravel.com/docs/10.x/http-client#making-requests)
+- [dd() helper](https://laravel.com/docs/10.x/helpers#method-dd)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Step 4 - URL & query params
 
-## Code of Conduct
+_In order to make the request dynamic we need to split up the API endpoint._
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+The API endpoint has two parts:
+- URL: `https://tahvel.edu.ee/hois_back/timetableevents/timetableByGroup/38`
+- Query: `?from=2023-10-30T00:00:00Z&studentGroups=5901&thru=2023-11-05T00:00:00Z`
+Each of the query params has a key & value pair.
+- Following the [query params](https://laravel.com/docs/10.x/http-client#get-request-query-parameters) example from the docs, update the Http request.
+- Run the command to validate, result should be the same as before.
 
-## Security Vulnerabilities
+### Resources
+- [Get(): query params](https://laravel.com/docs/10.x/http-client#get-request-query-parameters)
+ 
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Step 5 - Dynamic query
 
-## License
+_**!!** For testing purposes we are using current week instead of next week as next week has no data._
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+Using [Carbon](https://carbon.nesbot.com/docs/) and [now()](https://laravel.com/docs/10.x/helpers#method-now) replace the the `from` & `thru` hardcoded dates.
+- to get the start of week we can use `now()->startOfWeek()` & for the end of week we can use `now()->endOfWeek()`
+- to get next week simply change the code as follows: `now()->addWeek(1)->startOfWeek`.
+- Create two variables, `$startDate` & `$endDate` that equal next weeks start day and end day respectivly.
+- Replace the string dates in the query with the variables.
+- 
+**!!** We also need to format the date variables inside the query.
+- `2023-11-05T00:00:00Z` is an ISO standard date, so adding `toIsoString()` to the end of both `from` & `thru` values should suffice.
+- Once again run the command to validate.
+
+### Step 6 - Data transformations
+- Extract the `timetableEvents` from the response data and save them in a `collection()`
+- Sort the events by `date` & `timeStart`
+- Group the events by localized day name e.g "kolmapäev".
+
+<details>
+<summary>Solution (Dont peek unless you have tried everything else.)</summary>
+ 
+```PHP
+$timetableEvents = collect($data['timetableEvents'])
+        ->sortBy(['date', 'timeStart'])
+        ->groupBy(function ($event) {
+            return Carbon::parse($event['date'])->locale('et_EE')->dayName;
+        });
+```
+</details>
+
+### Resources
+- [Collections](https://laravel.com/docs/10.x/collections)
+ 
+## Step 7 - Configuring the mailable
+
+- Open the mailable `Timetable` and add 3 protected variables to the constructor.
+  - `$timetableEvents` - typehint should be a Collection
+  - `$startDate` - typehint should be Carbon
+  - `$endDate` -- typehint should be Carbon
+- Create a new folder `emails` in `resources/views`
+- Add a new blade file in the `emails` folder named `timetable.blade.php`
+- In the `Timetable` mailable, change the named parameter `view:` in the content method to `markdown:` & change the value to `emails.timetable`.
+- add a new named parameter `with:` & for the value we need to add the variables from the consturctor as key => value pairs.
+
+_Check the docs below for guidance._
+  ### Resources
+  - [Mail data via the with method](https://laravel.com/docs/10.x/mail#via-the-with-parameter)
+
+## Step 8 - Mail template
+To configure the mail template we should expose the mailable as a route.
+- Add a new route to `web.php`
+- The route should return an instance of the mailable `Timetable` and it should include the 3 variables from step 7
+  
+  ```PHP
+  Route::get('/mailable', function () {
+    
+    // All the code logic from timetableNotification commands handle() method
+    
+    return new Timetable($timetableEvents, $startDate, $endDate);
+    });
+    ```
+- now by navigation to `/mailable` in the browser you should be able to see an error
+  - ```DOMDocument::loadHTML(): Argument #1 ($source) must not be empty ```
+- Using markdown & blade syntax configure the ´timetable.blade.php´ to your liking.
+  - On the template you have access to the variables passed on from the `content` methods `with:` parameter.
+
+  ### Resources
+  - [Writing markdown messages](https://laravel.com/docs/10.x/mail#writing-markdown-messages)
+
+  ## Step 9 - Sending the email
+  - Open up the `TimetableNotification` command and remove all/any `dd()` methods and end the command by sending out an email using `Timetable` mailable
+  -  Run the command once more.
+  - Check mailtrap inbox to see if you have recieved any e-mails.
+ 
+  - <img width="1531" alt="image" src="https://github.com/RalfHei/laravel-template/assets/56673494/5c6d7fd7-6d6b-48c5-baf2-934643961bba">
+
+ 
+<details>
+<summary>Solution (Dont peek unless you have tried everything else.)</summary>
+
+```PHP
+   Mail::to('test@test.ee')->send(new Timetable($timetableEvents, $startDate, $endDate));
+```
+</details>
+
+    
+
+  
