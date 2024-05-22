@@ -10,7 +10,8 @@ Create an e-mail notification app.
 
 - Create an `.env` file based on `.env_example`
 - Open mailtrap and select _laravel 9+_ from the integrations dropdown.
-  <img width="1298" alt="image" src="https://github.com/RalfHei/laravel-template/assets/56673494/9f5ea50c-e765-4079-904d-0b64c85290c1">
+ <img width="1298" alt="280022168-9f5ea50c-e765-4079-904d-0b64c85290c1" src="https://github.com/kuressaareametikool/laravel-template/assets/56673494/d9ea6128-48d2-465e-9db9-e98dcb55b88e">
+
 - Replace `MAIL_*` variables in the `.env` file with the ones provided by mailtrap.
 
 ## Step 2 - artisan commands
@@ -32,11 +33,11 @@ _An example timetable request_
 - Using `dd()` helper method dump out the response.
 - To run the command in terminal: `php artisan $signature` _(replace `$signature` with the respective variables string value from the `TimetableNotification` class)_
 - Response in the terminal should look like this:
-  <img width="714" alt="image" src="https://github.com/RalfHei/laravel-template/assets/56673494/5dcc90b3-6b6c-4609-9418-9f3633e23a7c">
+- <img width="714" alt="280034303-5dcc90b3-6b6c-4609-9418-9f3633e23a7c" src="https://github.com/kuressaareametikool/laravel-template/assets/56673494/4e4853ff-27ab-41b7-be57-0e5f188214b7">
 
 - To get the actual data from the response we need to use the `json()` method _(Check the "making request" docs)_
 - Running the command with the added `json()` method we should see the following output:
-  <img width="714" alt="image" src="https://github.com/RalfHei/laravel-template/assets/56673494/c5455ce5-246a-4351-a01b-3a684c7f9fae">
+- <img width="714" alt="280035882-c5455ce5-246a-4351-a01b-3a684c7f9fae" src="https://github.com/kuressaareametikool/laravel-template/assets/56673494/c35e6b92-7f1a-447f-ad1f-3f98cc8a2843">
 
 
 ### Resources
@@ -134,7 +135,7 @@ To configure the mail template we should expose the mailable as a route.
   -  Run the command once more.
   - Check mailtrap inbox to see if you have recieved any e-mails.
  
-  - <img width="1531" alt="image" src="https://github.com/RalfHei/laravel-template/assets/56673494/5c6d7fd7-6d6b-48c5-baf2-934643961bba">
+- <img width="1531" alt="280128001-5c6d7fd7-6d6b-48c5-baf2-934643961bba" src="https://github.com/kuressaareametikool/laravel-template/assets/56673494/63240631-d20e-4500-8636-56c98d54d1d7">
 
  
 <details>
