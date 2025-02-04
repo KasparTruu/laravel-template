@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'timetable' => [
+        'url' => env('TIMETABLE_API_URL', 'https://tahvel.edu.ee/hois_back/timetableevents/timetableByGroup/38'),
+        'group_id' => env('TIMETABLE_GROUP_ID', '7596'),
+    ],
+
 ];
